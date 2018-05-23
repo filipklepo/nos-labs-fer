@@ -1,5 +1,6 @@
 from Crypto import Random
 from Crypto.Cipher import AES
+from Crypto.Cipher import DES3
 from Crypto.Util import Padding
 import base64
 
@@ -28,7 +29,6 @@ def aes():
     for i in range(len(input) // block_size):
         output += cypher.encrypt(input[i*block_size:(i+1)*block_size])
     output = base64.b64encode(output)
-    #QUESTION: do i really need to append iv to output?
 
     #--DECRYPT
     enc = output
@@ -42,12 +42,46 @@ def aes():
     print("Decrypted content:", decrypted_output)
     print("Success:", input == decrypted_output)
 
-    #ASYMETRIC: RSA for asymetric RSA (3 different key sizes)
+    #ASYMMETRIC: RSA and ElGamal for asymetric (3 different key sizes)
     #HASH: SHA-1 as hash function (SHA1-256, SHA1-512, ..)
-    #try do decrypt it all
 
 def three_des():
-    pass
+    input = "filipjelegendafilipjelegendafilipjelegendafilipjelegenda"
+
+    # ---PICKER
+    des_modes = {
+        'MODE_CBC': DES3.MODE_CBC,
+        'MODE_CFB': DES3.MODE_CFB,
+        'MODE_OFB': DES3.MODE_OFB}
+    des_key_sizes = {'16': 16, '24': 24}
+
+    # ---CHOOSER
+    des_mode = des_modes['MODE_CBC']
+    key_size = des_key_sizes['16']
+    key = Random.new().read(key_size)
+    block_size = DES3.block_size
+    iv = Random.new().read(block_size)
+    cypher = DES3.new(key, des_mode, iv)
+
+    # ---ENCRYPT
+    input = bytes(input, 'utf-8')
+    input = Padding.pad(input, block_size)
+    output = b''
+    for i in range(len(input) // block_size):
+        output += cypher.encrypt(input[i * block_size:(i + 1) * block_size])
+    output = base64.b64encode(output)
+
+    #--DECRYPT
+    enc = output
+    enc = base64.b64decode(enc)
+
+    decypher = DES3.new(key, des_mode, iv)
+    decrypted_output = b''
+    for i in range(len(enc) // block_size):
+        decrypted_output += decypher.decrypt(enc[i*block_size:(i+1)*block_size])
+    # decrypted_output = Padding.unpad(decrypted_output, block_size)
+    print("Decrypted content:", decrypted_output)
+    print("Success:", input == decrypted_output)
 
 
 #If there's time left:
@@ -72,4 +106,4 @@ def three_des():
 # root_tk = Tk()
 # crypto_gui = CryptoGui(root_tk)
 # root_tk.mainloop()
-main()
+three_des()

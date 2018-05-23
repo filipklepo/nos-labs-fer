@@ -17,7 +17,6 @@ def aes():
     aes_mode = aes_modes['MODE_CBC']
     key_size = aes_key_sizes['AES-192']
     key = Random.new().read(key_size)
-    assert len(key) == key_size, "Key is of invalid size: {}".format(len(key))
     block_size = AES.block_size
     iv = Random.new().read(block_size)
     cypher = AES.new(key, aes_mode, iv)
@@ -47,7 +46,8 @@ def aes():
     #HASH: SHA-1 as hash function (SHA1-256, SHA1-512, ..)
     #try do decrypt it all
 
-def des3():
+def three_des():
+    pass
 
 
 #If there's time left:

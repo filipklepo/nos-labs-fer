@@ -3,6 +3,22 @@ import re
 
 REPR_MAX_LINE_LENGTH = 64
 
+def welcome_msg():
+    print(
+'''
+   _____                  _         
+  / ____|                | |        
+ | |     _ __ _   _ _ __ | |_ _   _ 
+ | |    | '__| | | | '_ \| __| | | |
+ | |____| |  | |_| | |_) | |_| |_| |
+  \_____|_|   \__, | .__/ \__|\__, |
+               __/ | |         __/ |
+              |___/|_|        |___/ 
+              
+Welcome to Crypty, a tool for generating electronic seal.
+'''
+    )
+
 def _chunks(list, n):
     result = []
     for i in range(len(list) // n + 1):

@@ -1,3 +1,5 @@
+import sys
+import re
 
 REPR_MAX_LINE_LENGTH = 64
 
@@ -11,6 +13,20 @@ def _chunks(list, n):
 
 def _adjust_str_for_repr(str):
     return '\n'.join(['    ' + chunk for chunk in _chunks(str, REPR_MAX_LINE_LENGTH)])
+
+def read_arr_elem(arr, mesg):
+    ans = ""
+    print(mesg+':')
+    for i in range(len(arr)):
+        print('    {}) {}'.format(i+1, arr[i]))
+    while len(ans) == 0 or re.match(r'^\d+$', ans) is None or int(ans) > len(arr):
+        print("> ", end="", flush=True)
+        ans = sys.stdin.readline().strip()
+    return arr[int(ans)-1]
+
+def read_word(mesg):
+    print(mesg+': ', end="", flush=True)
+    return sys.stdin.readline().strip()
 
 def sym_to_file(input_filename, method, data, output_filename, description="Crypted file"):
     formatted_data = _adjust_str_for_repr(data)

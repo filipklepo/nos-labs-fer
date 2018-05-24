@@ -94,6 +94,76 @@ Modulus:
 {exponent_repr}
 
 ---END NOS CRYPTO DATA---
-
 '''.format(description=description, key_length=key_length, modulus_repr=modulus_repr,
            repr_prefix=repr_prefix, exponent_repr=exponent_repr))
+
+def rsa_key_to_file(output_filename, rsa_key, private=False, description=""):
+    repr_prefix = "Public "
+    if private:
+        repr_prefix = "Private "
+    if description == "":
+        description = repr_prefix + "key"
+    key_length = _int_to_hex_str_padded(rsa_key.size() + 1)
+
+    modulus_repr = _adjust_str_for_repr(hex(rsa_key.n)[2:])
+    exponent_repr = ""
+    if not private:
+        exponent_repr = _adjust_str_for_repr(hex(rsa_key.e)[2:])
+    else:
+        exponent_repr = _adjust_str_for_repr(hex(rsa_key.d)[2:])
+
+    with open(output_filename, 'w') as f:
+        f.write('''
+---BEGIN NOS CRYPTO DATA---
+Description:
+    {description}
+
+Method:
+    RSA
+
+Key length:
+    {key_length}
+
+Modulus:
+{modulus_repr}
+
+{repr_prefix}exponent:
+{exponent_repr}
+
+---END NOS CRYPTO DATA---
+'''.format(description=description, key_length=key_length, modulus_repr=modulus_repr,
+           repr_prefix=repr_prefix, exponent_repr=exponent_repr))
+
+def elg_key_to_file(output_filename, elg, private=False, description=""):
+    repr_prefix = "Public "
+    if private:
+        repr_prefix = "Private "
+    if description == "":
+        description = repr_prefix + "key"
+    key_length = _int_to_hex_str_padded(elg.size() + 1)
+
+    modulus_repr = _adjust_str_for_repr(hex(elg.p)[2:])
+    generator_repr = _adjust_str_for_repr(hex(elg.g)[2:])
+
+    with open(output_filename, 'w') as f:
+        f.write('''
+---BEGIN NOS CRYPTO DATA---
+Description:
+    {description}
+
+Method:
+    ElGamal
+
+Key length:
+    {key_length}
+
+Modulus:
+{modulus_repr}
+
+Generator:
+{generator_repr}
+
+---END NOS CRYPTO DATA---
+'''.format(description=description, key_length=key_length, modulus_repr=modulus_repr,
+           generator_repr=generator_repr))
+

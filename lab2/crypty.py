@@ -3,8 +3,10 @@ from Crypto.Cipher import AES
 from Crypto.Cipher import DES3
 from Crypto.Util import Padding
 from Crypto.PublicKey import RSA
+from Crypto.PublicKey import ElGamal
 import base64
 import repr_file_util
+from random import randint
 
 class CryptyAES:
     def __init__(self):
@@ -24,6 +26,13 @@ class CryptyDES3:
             'MODE_OFB': DES3.MODE_OFB}
         self.key_sizes = {'16': 16, '24': 24}
 
+class CryptyRSA:
+    def __init__(self):
+        self.key_sizes = [1024, 2048, 4096]
+
+class CryptyElGamal:
+    def __init__(self):
+        self.key_sizes = [256, 512, 1024]
 
 #############################
 #######
@@ -101,7 +110,6 @@ def three_des():
     #--DECRYPT
     enc = output
     enc = base64.b64decode(enc)
-
     decypher = DES3.new(key, des_mode, iv)
     decrypted_output = b''
     for i in range(len(enc) // block_size):
@@ -122,7 +130,23 @@ def rsa():
     key_size = rsa_key_sizes[1]
     private_key = RSA.generate(key_size)
     public_key = private_key.publickey()
-    repr_file_util.rsa_key_to_file("pub.pem", public_key)
-    repr_file_util.rsa_key_to_file("priv.pem", private_key, private=True)
+    input = "filip filip filip filip filip"
+    input = bytes(input, 'utf-8')
+    ciphtext = public_key.encrypt(input, "0")
+    deciphertext = private_key.decrypt(ciphtext)
+    print(input == deciphertext)
 
-rsa()
+def el_gamal():
+    elg_key_sizes = [256, 512, 1024]
+    key_size = 256
+    private_key = ElGamal.generate(key_size, Random.new().read)
+    public_key = private_key.publickey()
+    repr_file_util.elg_key_to_file("elgpub.pem", private_key)
+    repr_file_util.elg_key_to_file("elgpriv.pem", public_key, private=True)
+    input = "filip filip filip filip filip"
+    input = bytes(input, 'utf-8')
+    ciphtext = public_key.encrypt(input, randint(1, public_key.p-2))
+    deciphertext = private_key.decrypt(ciphtext)
+    print(input == deciphertext)
+
+el_gamal()

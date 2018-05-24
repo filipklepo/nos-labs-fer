@@ -2,7 +2,34 @@ from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Cipher import DES3
 from Crypto.Util import Padding
+from Crypto.PublicKey import RSA
 import base64
+import repr_file_util
+
+class CryptyAES:
+    def __init__(self):
+        self.modes = {
+        'MODE_CBC': AES.MODE_CBC,
+        'MODE_CFB': AES.MODE_CFB,
+        'MODE_OFB': AES.MODE_OFB}
+        self.key_sizes = {'128': 16, '192': 24, '256': 32}
+
+# metode po potrebi
+
+class CryptyDES3:
+    def __init__(self):
+        self.modes = {
+            'MODE_CBC': DES3.MODE_CBC,
+            'MODE_CFB': DES3.MODE_CFB,
+            'MODE_OFB': DES3.MODE_OFB}
+        self.key_sizes = {'16': 16, '24': 24}
+
+
+#############################
+#######
+## SYMMETRIC
+######
+#############################
 
 def aes():
     input = "filipjelegendafilipjelegendafilipjelegendafilipjelegenda"
@@ -83,27 +110,19 @@ def three_des():
     print("Decrypted content:", decrypted_output)
     print("Success:", input == decrypted_output)
 
+#############################
+#######
+## ASYMMETRIC (RSA and ElGamal)
+######
+#############################
+## 3 different key sizes
 
-#If there's time left:
-#
-# class CryptoGui:
-#     def __init__(self, master):
-#         self.master = master
-#         master.title("Crypto util")
-#
-#         self.label = Label(master, text="Crypto util!")
-#         self.label.pack()
-#
-#         self.submit_button = Button(master, text="Submit", command=self.submit)
-#         self.submit_button.pack()
-#
-#         self.close_button = Button(master, text="Close", command=master.quit)
-#         self.close_button.pack()
-#
-#     def submit(self):
-#         print("Submitted")
+def rsa():
+    rsa_key_sizes = [1024, 2048, 4096]
+    key_size = rsa_key_sizes[1]
+    private_key = RSA.generate(key_size)
+    public_key = private_key.publickey()
+    repr_file_util.rsa_key_to_file("pub.pem", public_key)
+    repr_file_util.rsa_key_to_file("priv.pem", private_key, private=True)
 
-# root_tk = Tk()
-# crypto_gui = CryptoGui(root_tk)
-# root_tk.mainloop()
-three_des()
+rsa()
